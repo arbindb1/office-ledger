@@ -33,10 +33,6 @@ class Colleague extends Model
         return $this->hasMany(LedgerEntry::class);
     }
 
-    /**
-     * Outstanding balance = sum(debits) - sum(credits)
-     * Positive means they owe you. Negative means advance/overpay.
-     */
     public function outstandingBalance(): float
     {
         $debits = (float) $this->ledgerEntries()

@@ -21,9 +21,7 @@ class ColleagueAlias extends Model
     public static function normalize(string $s): string
     {
         $s = mb_strtolower(trim($s));
-        // remove extra spaces
         $s = preg_replace('/\s+/', ' ', $s);
-        // optionally strip punctuation for stronger matching:
         $s = preg_replace('/[^\p{L}\p{N}\s]/u', '', $s);
         return $s ?? '';
     }

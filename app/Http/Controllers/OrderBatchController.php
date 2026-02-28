@@ -5,19 +5,40 @@ namespace App\Http\Controllers;
 use App\Models\OrderBatch;
 use App\Models\OrderItem;
 use App\Services\FinalizeOrderBatchService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderBatchController extends Controller
 {
+public function index(Request $request)
+{
+    $q = OrderBatch::query()
+        ->withCount('items')
+        ->orderByDesc('id');
+
+    if ($request->filled('status')) {
+        $q->where('status', $request->get('status'));
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => $q->limit(100)->get(),
+    ]);
+}
+
+
     public function store(Request $request)
     {
+        Log::info($request);
         $data = $request->validate([
             'title' => ['nullable', 'string', 'max:255'],
             'vendor_name' => ['nullable', 'string', 'max:255'],
-            'ordered_at' => ['required', 'date'],
             'notes' => ['nullable', 'string'],
         ]);
 
+        $data['ordered_at'] = now();
+        Log::info($data);
         $batch = OrderBatch::create([
             ...$data,
             'status' => 'draft',
@@ -51,13 +72,11 @@ class OrderBatchController extends Controller
         $data = $request->validate([
             'colleague_id' => ['required', 'exists:colleagues,id'],
 
-            // Either item_id or item_name
             'item_id' => ['nullable', 'integer', 'exists:items,id', 'required_without:item_name'],
             'item_name' => ['nullable', 'string', 'max:255', 'required_without:item_id'],
 
             'quantity' => ['nullable', 'integer', 'min:1'],
 
-            // Optional override (if item_id is used, this overrides default_price)
             'unit_price' => ['nullable', 'numeric', 'min:0'],
         ]);
 
@@ -132,5 +151,14 @@ class OrderBatchController extends Controller
     ]);
 }
 
+public function destroy(int $batchId){
+    $batch = OrderBatch::findOrFail($batchId);
+    Log::info($batch);
+    $batch->ledgerEntries()->delete();
+    $batch->Items()->delete();
+    $batch->delete();
+
+    return response()->json(['message' => 'Batch and debts archived']);
+}
 
 }

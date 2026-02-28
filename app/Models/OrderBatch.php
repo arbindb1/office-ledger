@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderBatch extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'title',
         'vendor_name',
@@ -20,6 +22,9 @@ class OrderBatch extends Model
         'ordered_at' => 'datetime',
     ];
 
+    public function ledgerEntries(): HasMany{
+        return $this->hasMany(LedgerEntry::class,'order_batch_id');
+    }
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class, 'order_batch_id');

@@ -30,7 +30,7 @@ class NotificationController extends Controller
 
  public function unmatched(Request $request)
     {
-        $status = $request->query('status'); // unmatched|matched|applied|ignored|null
+        $status = $request->query('status'); 
 
         $q = PaymentNotification::query();
 

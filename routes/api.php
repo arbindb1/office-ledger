@@ -12,11 +12,17 @@ Route::get('/colleagues', [ColleagueController::class, 'index']);
 Route::post('/colleagues', [ColleagueController::class, 'store']);
 Route::post('/colleagues/{id}/aliases', [ColleagueController::class, 'addAlias']);
 Route::get('/colleagues/{id}/ledger', [ColleagueController::class, 'ledger']);
+Route::post('/colleagues/{colleague}/deactivate', [ColleagueController::class, 'deactivate']);
+Route::get('/colleagues/{id}/analytics', [ColleagueController::class, 'analytics'])
+    ->name('colleagues.analytics');
 
 // Orders
+Route::get('/order-batches', [OrderBatchController::class, 'index']); 
 Route::post('/order-batches', [OrderBatchController::class, 'store']);
+Route::delete('/order-batch/{id}',[OrderBatchController::class,'destroy']);
 Route::post('/order-batches/{id}/items', [OrderBatchController::class, 'addItem']);
 Route::post('/order-batches/{id}/finalize', [OrderBatchController::class, 'finalize']);
+
 
 // Notifications
 Route::post('/notifications/ingest', [NotificationController::class, 'ingest']);

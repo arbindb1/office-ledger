@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LedgerEntry extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'colleague_id',
-        'entry_type', // debit|credit
+        'entry_type', 
         'amount',
-        'source', // order_batch|esewa_notification|manual_adjustment
+        'source', 
         'order_batch_id',
         'payment_notification_id',
         'reference_key',

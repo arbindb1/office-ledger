@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->unique();            // e.g., "Momo"
-            $table->decimal('default_price', 10, 2);     // default unit price
-            $table->boolean('is_active')->default(true); // hide items without deleting
+            $table->string('name')->unique();           
+            $table->decimal('default_price', 10, 2);     
+            $table->boolean('is_active')->default(true); 
 
             $table->timestamps();
 
