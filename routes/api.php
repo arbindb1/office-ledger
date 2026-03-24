@@ -23,6 +23,8 @@ Route::delete('/order-batch/{id}',[OrderBatchController::class,'destroy']);
 Route::post('/order-batches/{id}/items', [OrderBatchController::class, 'addItem']);
 Route::post('/order-batches/{id}/finalize', [OrderBatchController::class, 'finalize']);
 
+Route::post('/order-batches/{id}/remove-item', [OrderBatchController::class, 'removeBatchItem']);
+
 
 // Notifications
 Route::post('/notifications/ingest', [NotificationController::class, 'ingest']);

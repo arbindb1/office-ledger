@@ -27,6 +27,23 @@ public function index(Request $request)
     ]);
 }
 
+public function removeBatchItem(Request $request, $id)
+{
+    Log::info($request);
+    $request->validate([
+        'item_id' => 'required|integer'
+    ]);
+
+    $batch = OrderBatch::findOrFail($id);
+    
+    if ($batch->status !== 'draft') {
+        return response()->json(['message' => 'Cannot modify a finalized batch'], 422);
+    }
+
+    $batch->items()->where('id', $request->item_id)->delete();
+
+    return response()->json(['message' => 'Item removed successfully']);
+}
 
     public function store(Request $request)
     {
