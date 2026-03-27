@@ -69,8 +69,12 @@ $colleagues = Colleague::query()
         return response()->json(['success' => true, 'data' => $alias]);
     }
 
-    public function ledger(int $colleagueId)
+    public function ledger(Request $request, int $colleagueId)
     {
+        if ($request->user() && $request->user()->role === 'colleague' && $request->user()->colleague_id != $colleagueId) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
         $colleague = Colleague::findOrFail($colleagueId);
 
         $ledger = $colleague->ledgerEntries()
@@ -116,6 +120,10 @@ $colleagues = Colleague::query()
 
 public function analytics(Request $request, $id)
 {
+    if ($request->user() && $request->user()->role === 'colleague' && $request->user()->colleague_id != $id) {
+        return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+    }
+
     $month = $request->query('month');
     $year = $request->query('year');
     $day   = $request->query('day'); 
